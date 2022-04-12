@@ -50,9 +50,9 @@
         {% endfor %}
     </p>
     <p>
-        {{ form.age.label }}<br>
-        {{ form.age(class="form-control") }}<br>
-        {% for error in form.age.errors %}
+        {{ form.date_of_birth.label }}<br>
+        {{ form.date_of_birth(class="form-control") }}<br>
+        {% for error in form.date_of_birth.errors %}
             <p class="alert alert-danger" role="alert">
                 {{ error }}
             </p>
