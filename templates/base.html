@@ -13,13 +13,17 @@
 <header>
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="/">/навазние кинофестиваля/</a>
-
-            <a class="navbar-brand" href="">   </a>
-
+        {% if current_user.is_authenticated %}
+        <p>
+            <a class="navbar-brand" href="/">{{ current_user.name + " " + current_user.surname}}</a>
+            <a class="btn btn-light" href="/logout">Выйти</a>
+        </p>
+        {% else %}
             <p>
                 <a class="btn btn-light" href="/register">Зарегистрироваться</a>
                 <a class="btn btn-light" href="/login">Войти</a>
             </p>
+        {% endif %}
 
     </nav>
 </header>
