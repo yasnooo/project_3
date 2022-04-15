@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for use in user %}
+{% if current_user.name == use.name%}
+{% if current_user.surname == use.surname%}
+{% if current_user.email == use.email%}
+    <div class="text-center">
+        <h1>
+            Личный кабинет
+        </h1>
+</div>
+<p>
+   {{ use.name }}
+        {{ use.surname }}
+        {{ use.email }}
+        {{ use.date_of_birth }}
+</p>
+<p>
+    <a class="btn btn-light" href="/">Предложить фильм для кинофестеваля</a>
+</p>
+{% endif %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endblock %}

@@ -23,6 +23,13 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
+@app.route('/main_page')
+def main_page():
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).all()
+    return render_template('main_page.html', user=user)
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
