@@ -1,10 +1,13 @@
+import datetime
 from flask import Flask, render_template, redirect, request, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from data import db_session
 from data.users import User
 from data.films import Films
+from data.festivals import Festival
 from forms.login import LoginForm
 from forms.register import RegisterForm
+from forms.create_festival import CreateFestivalForm
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -32,7 +35,9 @@ def main_page():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    db_sess = db_session.create_session()
+    festival = db_sess.query(Festival).filter(datetime.date.today() >= Festival.start_date).first()
+    return render_template("index.html", fest=festival)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -74,13 +79,44 @@ def reqister():
             name=form.name.data,
             email=form.email.data,
             surname=form.surname.data,
-            date_of_birth=form.date_of_birth.data,
+            date_of_birth=form.date_of_birth.data
         )
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
+
+
+@app.route('/create_festival', methods=['GET', 'POST'])
+def create_festival():
+    form = CreateFestivalForm()
+    if form.validate_on_submit():
+        if form.start_date.data >= form.end_date.data:
+            return render_template('create_festival.html', title='Новый фестиваль',
+                                   form=form,
+                                   message="Дата начала должна быть раньше даты окончания")
+        if form.start_date.data <= datetime.date.today():
+            return render_template('create_festival.html', title='Новый фестиваль',
+                                   form=form,
+                                   message="Извените, но у нас нет машины времени ¯\_(ツ)_/¯")
+        db_sess = db_session.create_session()
+        if db_sess.query(Festival).filter(Festival.end_date >= form.start_date.data).first():
+            return render_template('create_festival.html', title='Новый фестиваль',
+                                   form=form,
+                                   message="На эту дату уже запланированн фестиваль")
+        festival = Festival(
+            title=form.title.data,
+            description=form.description.data,
+            genres=form.genres.data,
+            start_date=form.start_date.data,
+            end_date=form.end_date.data
+        )
+        db_sess.add(festival)
+        db_sess.commit()
+        return redirect('/')
+    return render_template('create_festival.html', title='Новый фестиваль', form=form)
+
 
 
 if __name__ == '__main__':

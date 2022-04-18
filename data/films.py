@@ -13,3 +13,4 @@ class Films(SqlAlchemyBase):
     duration = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     is_approved = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)
     #user = orm.relation('User')
+    # festival = orm.relation('Festival')
