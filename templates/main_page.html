@@ -6,18 +6,40 @@
 {% if current_user.surname == use.surname%}
 {% if current_user.email == use.email%}
     <div class="text-center">
-        <h1>
+        <h2>
             Личный кабинет
-        </h1>
+        </h2>
+</div>
+
+<div class="text-left">
+    <h2>
+        {{ use.name }}
+    {{ use.surname }}
+    </h2>
+</div>
+<div class="text-left">
+    <h4>
+        Информация о пользователе
+    </h4>
 </div>
 <p>
-   {{ use.name }}
-        {{ use.surname }}
-        {{ use.email }}
-        {{ use.date_of_birth }}
+        Электронная почта: {{ use.email }}
+    <br>
+        Дата рождения: {{ use.date_of_birth }}
+</p>
+<div class="text-left">
+    <h4>
+        Педложенные фильмы
+    </h4>
+</div>
+<p>
+
+    Вы не предложили ни одного фильма
+
+
 </p>
 <p>
-    <a class="btn btn-light" href="/">Предложить фильм для кинофестеваля</a>
+    <a class="btn btn-dark" href="/">Предложить фильм для кинофестеваля</a>
 </p>
 {% endif %}
 {% endif %}
