@@ -33,6 +33,7 @@ def main_page():
     return render_template('main_page.html', user=user)
 
 
+
 @app.route("/")
 def index():
     db_sess = db_session.create_session()
