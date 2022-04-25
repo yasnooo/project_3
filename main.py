@@ -8,6 +8,7 @@ from data.festivals import Festival
 from forms.login import LoginForm
 from forms.register import RegisterForm
 from forms.create_festival import CreateFestivalForm
+from forms.suggest_film import SuggestFilmForm
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -31,7 +32,6 @@ def main_page():
     db_sess = db_session.create_session()
     user = db_sess.query(User).all()
     return render_template('main_page.html', user=user)
-
 
 
 @app.route("/")
@@ -118,6 +118,16 @@ def create_festival():
         return redirect('/')
     return render_template('create_festival.html', title='Новый фестиваль', form=form)
 
+
+@app.route('/suggest_film', methods=['GET', 'POST'])
+def suggest_film():
+    form = SuggestFilmForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+
+
+        return redirect('/')
+    return render_template('suggest_film.html', title='Предложить фильм', form=form)
 
 
 if __name__ == '__main__':
