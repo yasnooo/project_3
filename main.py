@@ -9,6 +9,7 @@ from forms.login import LoginForm
 from forms.register import RegisterForm
 from forms.create_festival import CreateFestivalForm
 from forms.suggest_film import SuggestFilmForm
+from forms.add_film import AddFilmForm
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -37,8 +38,12 @@ def main_page():
 @app.route("/")
 def index():
     db_sess = db_session.create_session()
-    festival = db_sess.query(Festival).filter(datetime.date.today() >= Festival.start_date).first()
-    return render_template("index.html", fest=festival)
+    festival = db_sess.query(Festival).filter(datetime.date.today() <= Festival.end_date).first()
+    if festival:
+        films = db_sess.query(Films).filter(Films.festival_id == festival.id).all()
+    else:
+        films = None
+    return render_template("index.html", fest=festival, films=films)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -119,15 +124,24 @@ def create_festival():
     return render_template('create_festival.html', title='Новый фестиваль', form=form)
 
 
+@app.route('/add_film', methods=['GET', 'POST'])
+def create_festival():
+    form = AddFilmForm()
+
+
 @app.route('/suggest_film', methods=['GET', 'POST'])
 def suggest_film():
     form = SuggestFilmForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
 
-
         return redirect('/')
     return render_template('suggest_film.html', title='Предложить фильм', form=form)
+
+
+@app.route('/show/<film_name>')
+def show(film_name):
+    pass
 
 
 if __name__ == '__main__':

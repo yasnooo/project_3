@@ -4,4 +4,21 @@
     <div class="text-center">
         <img src="../static/img/kino22.jpg" class="rounded" alt="..." width="100%" >
 </div>
+{% if fest %}
+<div class="text-left">
+    <h1>
+        {{ fest.title }}
+    </h1>
+    <h4>
+        {{ fest.start_date }} - {{ fest.end_date}}
+        {{ fest.genres }}
+    </h4>
+    <h3>
+        {{ fest.description }}
+    </h3>
+    {% for film in films %}
+    # кнопки для перехода в show/film_name
+    {% endfor %}
+</div>
+{% endif %}
 {% endblock %}
