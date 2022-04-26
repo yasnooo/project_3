@@ -6,6 +6,7 @@
 </div>
 {% if fest %}
 <div class="text-left">
+    <p>
     <h1>
         {{ fest.title }}
     </h1>
@@ -16,9 +17,18 @@
     <h3>
         {{ fest.description }}
     </h3>
+    <h3>
+        На данном фестивале вы сможете посмотреть:
+    </h3>
+    <ul>
     {% for film in films %}
+        <li>
+            <h4>"{{film.title}}"</h4>
+        </li>
     # кнопки для перехода в show/film_name
     {% endfor %}
+    </ul>
+    </p>
 </div>
 {% endif %}
 {% endblock %}

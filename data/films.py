@@ -13,7 +13,6 @@ class Films(SqlAlchemyBase):
     kinopoisk_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     festival_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("festivals.id")) # доделать когда появится таблица с фестивалями
     title = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    date = sqlalchemy.Column(sqlalchemy.Date, nullable=True)
     is_approved = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)
     festival = orm.relation('Festival')
     user = orm.relation('User')

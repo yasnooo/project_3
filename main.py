@@ -125,7 +125,7 @@ def create_festival():
 
 
 @app.route('/add_film', methods=['GET', 'POST'])
-def create_festival():
+def add_film():
     form = AddFilmForm()
 
 
