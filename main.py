@@ -131,7 +131,8 @@ def add_film():
     form = AddFilmForm()
     db_sess = db_session.create_session()
     if form.validate_on_submit():
-        if form.festival != db_sess.query(Festival).filter(datetime.date.today() <= Festival.end_date).first().name():
+        if str(form.festival.data) != db_sess.query(Festival).filter(
+                datetime.date.today() <= Festival.end_date).first().title():
             return render_template('reg_film.html', title='Новый фильм',
                                    form=form,
                                    message="Такого фестиваля нет")
