@@ -1,4 +1,5 @@
 import datetime
+from kinopoisk_api import KP
 from flask import Flask, render_template, redirect, request, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from data import db_session
@@ -15,6 +16,7 @@ app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'rainer_sit_down'
+kinopoisk = KP(token='707d0842-b312-41ee-9529-bddf754af883')
 
 
 def main():
@@ -127,6 +129,27 @@ def create_festival():
 @app.route('/add_film', methods=['GET', 'POST'])
 def add_film():
     form = AddFilmForm()
+    db_sess = db_session.create_session()
+    if form.validate_on_submit():
+        if form.festival != db_sess.query(Festival).filter(datetime.date.today() <= Festival.end_date).first().name():
+            return render_template('reg_film.html', title='Новый фильм',
+                                   form=form,
+                                   message="Такого фестиваля нет")
+        try:
+            film = kinopoisk.search(form.title)
+        except Exception:
+            return render_template('reg_film.html', title='Новый фильм',
+                                   form=form,
+                                   message="Мы не нашли такого фильма. Возможно вы неправильно ввели название.")
+        film = Films(
+            kinopoisk_id=film.kp_id,
+            festival_id=db_sess.query(Festival).filter(datetime.date.today() <= Festival.end_date).first().id(),
+            title=film.name,
+        )
+        db_sess.add(film)
+        db_sess.commit()
+        return redirect('/')
+    return render_template('reg_film.html', title='Новый фестиваль', form=form)
 
 
 @app.route('/suggest_film', methods=['GET', 'POST'])

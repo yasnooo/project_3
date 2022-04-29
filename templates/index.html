@@ -23,9 +23,8 @@
     <ul>
     {% for film in films %}
         <li>
-            <h4>"{{film.title}}"</h4>
+            <a class="btn btn-light btn-lg" href="/show/{{ film.title }}">{{film.title}}</a>
         </li>
-    # кнопки для перехода в show/film_name
     {% endfor %}
     </ul>
     </p>
