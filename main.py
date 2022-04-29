@@ -137,15 +137,16 @@ def add_film():
                                    form=form,
                                    message="Такого фестиваля нет")
         try:
-            film = kinopoisk.search(form.title)
+            film = kinopoisk.search(form.title.data)
         except Exception:
             return render_template('reg_film.html', title='Новый фильм',
                                    form=form,
                                    message="Мы не нашли такого фильма. Возможно вы неправильно ввели название.")
         film = Films(
-            kinopoisk_id=film.kp_id,
+            kinopoisk_id=film[0].kp_id,
             festival_id=db_sess.query(Festival).filter(datetime.date.today() <= Festival.end_date).first().id,
-            title=form.title,
+            title=form.title.data
+
         )
         db_sess.add(film)
         db_sess.commit()

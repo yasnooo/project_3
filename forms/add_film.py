@@ -7,4 +7,4 @@ class AddFilmForm(FlaskForm):
     title = StringField('Название', validators=[DataRequired()])
     genres = StringField('Жанры', validators=[DataRequired()])
     festival = StringField('Название фестиваля', validators=[DataRequired()])
-    submit = SubmitField('Создать')
+    submit = SubmitField('Добавить')
