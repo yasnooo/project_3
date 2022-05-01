@@ -11,6 +11,7 @@ from forms.register import RegisterForm
 from forms.create_festival import CreateFestivalForm
 from forms.suggest_film import SuggestFilmForm
 from forms.add_film import AddFilmForm
+from data.suggestions import Suggetions
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -34,7 +35,8 @@ def load_user(user_id):
 def main_page():
     db_sess = db_session.create_session()
     user = db_sess.query(User).all()
-    return render_template('main_page.html', user=user)
+    films = db_sess.query(Suggetions).filter(current_user.id == Suggetions.user_id).all()
+    return render_template('main_page.html', user=user, films=films)
 
 
 @app.route("/")
@@ -157,8 +159,15 @@ def add_film():
 @app.route('/suggest_film', methods=['GET', 'POST'])
 def suggest_film():
     form = SuggestFilmForm()
+    db_sess = db_session.create_session()
     if form.validate_on_submit():
-        db_sess = db_session.create_session()
+        # db_sess = db_session.create_session()
+        suggest = Suggetions(
+            name=form.title.data,
+            user_id=current_user.id
+        )
+        db_sess.add(suggest)
+        db_sess.commit()
 
         return redirect('/')
     return render_template('suggest_film.html', title='Предложить фильм', form=form)
