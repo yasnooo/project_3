@@ -11,23 +11,19 @@ class FILM:
         self.name = data['nameRu'] if data['nameEn'] == '' else data['nameEn']
         self.ru_name = data['nameRu']
         self.year = data['year'].split('-')[0] if data['type'] != 'FILM' else data['year']
-        self.duration = data['filmLength']
+        self.duration = str(data['filmLength'])
         self.tagline = data['slogan'] if data['slogan'] is not None else '-'
         self.description = data['description']
-        self.genres = [genre['genre'] for genre in data['genres']]
-        self.countries = [country['country'] for country in data['countries']]
-        self.age_rating = data['ratingAgeLimits']
+        self.genres = ', '.join([genre['genre'] for genre in data['genres']])
+        self.countries = ', '.join([country['country'] for country in data['countries']])
+        self.age_rating = data['ratingMpaa']
         self.kp_rate = data['kp_rate']
         self.imdb_rate = data['imdb_rate']
         self.kp_url = data['webUrl']
         self.premiere = data['premiereWorld']
         self.poster = data['posterUrl']
         self.poster_preview = data['posterUrlPreview']
-
-        try:
-            self.secret_url = 'https:/' + data['secret']['data'][0]['iframe_src']
-        except (TypeError, IndexError):
-            self.secret_url = None
+        self.secret_url = None
 
         secret_urls = {
             "283290": 'https://t.me/BorutoSerial',

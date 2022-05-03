@@ -190,7 +190,9 @@ def suggest_film():
 
 @app.route('/show/<film_name>')
 def show(film_name):
-    pass
+    db_sess = db_session.create_session()
+    film = kinopoisk.get_film(db_sess.query(Films).filter(Films.title == film_name).first().kinopoisk_id)
+    return render_template('show_film.html', film=film, title=film_name)
 
 
 if __name__ == '__main__':
