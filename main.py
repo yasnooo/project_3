@@ -36,7 +36,8 @@ def main_page():
     db_sess = db_session.create_session()
     user = db_sess.query(User).all()
     films = db_sess.query(Suggetions).filter(current_user.id == Suggetions.user_id).all()
-    return render_template('main_page.html', user=user, films=films)
+    suggestions = db_sess.query(Suggetions).all()
+    return render_template('main_page.html', user=user, films=films, suggestions=suggestions)
 
 
 @app.route("/")
@@ -47,6 +48,8 @@ def index():
         films = db_sess.query(Films).filter(Films.festival_id == festival.id).all()
     else:
         films = None
+        db_sess.delete(db_sess.query(Suggetions).all())
+    db_sess.commit()
     return render_template("index.html", fest=festival, films=films)
 
 
@@ -151,6 +154,8 @@ def add_film():
 
         )
         db_sess.add(film)
+        if db_sess.query(Suggetions).filter(film.title == Suggetions.name).first():
+            db_sess.delete(db_sess.query(Suggetions).filter(film.title == Suggetions.name).all())
         db_sess.commit()
         return redirect('/')
     return render_template('reg_film.html', title='Новый фестиваль', form=form)
@@ -161,7 +166,17 @@ def suggest_film():
     form = SuggestFilmForm()
     db_sess = db_session.create_session()
     if form.validate_on_submit():
-        # db_sess = db_session.create_session()
+        try:
+            film = kinopoisk.search(form.title.data)
+        except Exception:
+            return render_template('suggest_film.html', title='Предложить фильм',
+                                   form=form,
+                                   message="Мы не нашли такого фильма. Возможно вы неправильно ввели название.")
+        if not db_sess.query(Festival).filter(datetime.date.today() <= Festival.end_date).first():
+            return render_template('suggest_film.html', title='Предложить фильм',
+                                   form=form,
+                                   message="На данный момент не проводится ни одного фестиваля."
+                                           "Подождите начала следующего")
         suggest = Suggetions(
             name=form.title.data,
             user_id=current_user.id

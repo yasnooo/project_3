@@ -31,7 +31,9 @@
     <h4>
         Педложенные фильмы
     </h4>
+    <h5>Когда заканчивается текущий фестиваль все предложенные фильмы автоматически удаляются</h5>
 </div>
+{% if current_user.id != 1 %}
 <p>
     {% if films %}
     <ul>
@@ -43,12 +45,32 @@
 </ul>
     {% else %}
     Вы не предложили ни одного фильма
-{% endif %}
-
+    {% endif %}
 </p>
 <p>
     <a class="btn btn-dark" href="/suggest_film">Предложить фильм для кинофестеваля</a>
 </p>
+{% else %}
+<p>
+    {% if suggestions %}
+    <ul>
+    {% for film in suggestions %}
+    <li>
+        {{film.name}}   {{film.date}}
+    </li>
+    {% endfor %}
+</ul>
+    {% else %}
+    Нет предложенных фильмов
+    {% endif %}
+</p>
+<p>
+    <a class="btn btn-dark" href="/create_festival">Новый фестиваль</a>
+</p>
+<p>
+    <a class="btn btn-dark" href="/add_film">Новый фильм</a>
+</p>
+{% endif %}
 {% endif %}
 {% endif %}
 {% endif %}
