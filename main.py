@@ -154,8 +154,8 @@ def add_film():
 
         )
         db_sess.add(film)
-        if db_sess.query(Suggetions).filter(film.title == Suggetions.name).first():
-            db_sess.delete(db_sess.query(Suggetions).filter(film.title == Suggetions.name).all())
+        if db_sess.query(Suggetions).filter(form.title.data == Suggetions.name).first():
+            db_sess.delete(db_sess.query(Suggetions).filter(form.title.data == Suggetions.name).one())
         db_sess.commit()
         return redirect('/')
     return render_template('reg_film.html', title='Новый фестиваль', form=form)
